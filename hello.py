@@ -1,4 +1,28 @@
-from selenium import webdriver  # (1) 导入 Selenium 的 WebDriver 模块
-browser = webdriver.Chrome()    # (2) 启动 Chrome 浏览器
-browser.get('http://localhost:8000')  # (3) 访问本地 Django 开发服务器（端口 8000）
-assert 'Django' in browser.page_source  # (4) 检查页面是否包含 "Django" 文本
+from selenium import webdriver
+import unittest
+
+class NewVisitorTest(unittest.TestCase):
+
+    def setUp(self):
+        self.browser = webdriver.Chrome()
+
+    def tearDown(self):
+        self.browser.quit()
+
+    def test_can_start_a_list_and_retrieve_it_later(self):
+        # 张三听说有一个在线待办事项的应用
+        # 他去看了这个应用的首页
+        self.browser.get('http://localhost:8000')
+
+        # 他注意到网页里包含"To-Do"这个词
+        self.assertEqual('To-Do', self.browser.title, "browser title was:" + self.browser.title)
+        self.fail('Finish the test!')
+
+        # 应用有一个输入待办事项的文本输入框
+        # 他在文本输入框中输入了"Buy flowers"
+
+        # 他访问那个URL，发现他的待办事项列表还在
+        # 他满意的离开了
+
+if __name__ == '__main__':
+    unittest.main()
