@@ -17,7 +17,7 @@ class NewVisitorTest(unittest.TestCase):
         # 他去打开了这个应用的首页
         self.browser.get('http://localhost:8000')
 
-        # 他注意到网页标题中包含“To-Do”这个词
+        # 他注意到网页标题中包含"To-Do"这个词
         self.assertIn("To-Do", self.browser.title)
         header_text = self.browser.find_element(By.TAG_NAME, 'h1').text
         self.assertIn('To-Do', header_text)
@@ -29,19 +29,29 @@ class NewVisitorTest(unittest.TestCase):
             'Enter a to-do item'
         )
 
-        # 他在文本输入框中输入了 "Buy flowers"
+        # 他在文本输入框中输入了"Buy flowers"
         inputbox.send_keys('Buy flowers')
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
         
+        # 检查第一个待办事项
         table = self.browser.find_element(By.ID, 'id_list_table')
         rows = table.find_elements(By.TAG_NAME, 'tr')
         self.assertIn('1: Buy flowers', [row.text for row in rows])
 
-        self.fail('Finish the test!')
-        # 他访问的页面URL，发现他的待办事项列表还在
+        # 输入第二个待办事项
+        inputbox = self.browser.find_element(By.ID, 'id_new_item')
+        inputbox.send_keys('Give a gift to Lisi')
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
         
-        # 他感到很满意
+        # 检查两个待办事项
+        table = self.browser.find_element(By.ID, 'id_list_table')
+        rows = table.find_elements(By.TAG_NAME, 'tr')
+        self.assertIn('1: Buy flowers', [row.text for row in rows])
+        self.assertIn('2: Give a gift to Lisi', [row.text for row in rows])
+
+        self.fail('Finish the test!')
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(warnings='ignore')
