@@ -4,6 +4,7 @@ import time
 import unittest
 from selenium.webdriver.common.by import By
 
+
 class NewVisitorTest(unittest.TestCase):
 
     def setUp(self):
@@ -11,6 +12,11 @@ class NewVisitorTest(unittest.TestCase):
 
     def tearDown(self):
         self.browser.quit()
+
+    def check_for_row_in_list_table(self, row_text):
+        table = self.browser.find_element(By.ID, 'id_list_table')
+        rows = table.find_elements(By.TAG_NAME, 'tr')
+        self.assertIn(row_text, [row.text for row in rows])
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         # 用户听说有一个在线待办事项应用
@@ -33,25 +39,22 @@ class NewVisitorTest(unittest.TestCase):
         inputbox.send_keys('Buy flowers')
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
-        
+
         # 检查第一个待办事项
-        table = self.browser.find_element(By.ID, 'id_list_table')
-        rows = table.find_elements(By.TAG_NAME, 'tr')
-        self.assertIn('1: Buy flowers', [row.text for row in rows])
+        self.check_for_row_in_list_table('1: Buy flowers')
 
         # 输入第二个待办事项
         inputbox = self.browser.find_element(By.ID, 'id_new_item')
         inputbox.send_keys('Give a gift to Lisi')
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
-        
+
         # 检查两个待办事项
-        table = self.browser.find_element(By.ID, 'id_list_table')
-        rows = table.find_elements(By.TAG_NAME, 'tr')
-        self.assertIn('1: Buy flowers', [row.text for row in rows])
-        self.assertIn('2: Give a gift to Lisi', [row.text for row in rows])
+        self.check_for_row_in_list_table('1: Buy flowers')
+        self.check_for_row_in_list_table('2: Give a gift to Lisi')
 
         self.fail('Finish the test!')
+
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
