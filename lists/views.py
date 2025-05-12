@@ -18,3 +18,11 @@ def add_item(request, list_id):
     list_user = List.objects.get(id=list_id)
     Item.objects.create(text=request.POST['item_text'], list=list_user)
     return redirect(f'/lists/{list_user.id}/')
+    if request.method == 'POST':
+        Item.objects.create(text=request.POST['item_text'])
+        return redirect('/')
+
+    items = Item.objects.all()
+    return render(request, 'home.html', {'items': items})
+
+
